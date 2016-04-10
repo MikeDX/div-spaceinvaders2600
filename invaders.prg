@@ -19,6 +19,7 @@ level=0;
 invl[5]=(0,36,36*2,36*2+18,36*3);
 shieldson=1;
 landed=0;
+saucer=0;
 
 LOCAL
 
@@ -37,6 +38,7 @@ sounds[0]=load_wav("sounds/shoot.wav",0);
 sounds[1]=load_wav("sounds/explod.wav",0);
 sounds[2]=load_wav("sounds/invmov.wav",0);
 sounds[3]=load_wav("sounds/death.wav",0);
+sounds[4]=load_wav("sounds/saucer.wav",1);
 
 pscore[0]=0;
 pscore[1]=0;
@@ -65,7 +67,7 @@ loop
     playing=0;
     shieldson=1;
 
-    WHILE(invcount>35 && landed==0)
+    WHILE(invcount>0 && landed==0)
 
         if(playing)
             invanim=1-invanim;
@@ -93,6 +95,9 @@ loop
     END
     if(landed==0)
         frame(20000);
+        while(saucer)
+            frame;
+        end
 
         let_me_alone();
         level++;
@@ -140,6 +145,10 @@ END
 if(key(_space) && !get_id(type pshoot))
 pshoot(x);
 END
+
+if(key(_s) && saucer==0)
+saucership();
+end
 
 
 FRAME;
@@ -243,7 +252,7 @@ sound(sounds[1],256,256);
 invcount--;
 pscore[0]+=5*(6-itype);
 FROM graph = 30 to 33;
-FROM c = 1 to 10;
+FROM c = 1 to 5;
 
 x=ox+invx;
 y=oy+invy;
@@ -356,11 +365,12 @@ process showscores()
 
 begin
 //write_int(0,0,0,0,&pscore[0]);
-
+FROM graph = 0 to 1;
 FROM x = 0 to 3;
 
-score(0,x,(x*64)+40,37+2*(x==1 || x==2));
+score(graph,x,(x*64)+40+320*graph,37+2*(x==1 || x==2));
 
+END
 END
 
 
@@ -375,7 +385,11 @@ i=0;
 begin
 
 loop
-graph=digit[idx]+50;
+if(!saucer)
+graph=digit[idx]+50+sid*10;
+else
+graph=0;
+end
 
 frame;
 
@@ -407,4 +421,30 @@ frame;
 
 end
 
+end
+
+
+process saucership()
+
+private
+ssound=0;
+
+BEGIN
+
+saucer=1;
+
+x=640;
+y=40;
+graph=4;
+
+ssound=sound(sounds[4],256,256);
+define_region(1,0,28,640,371);
+while(x>0)
+x-=2;
+frame;
+end
+
+stop_sound(ssound);
+saucer=0;
+define_region(1,0,48,640,351);
 end
