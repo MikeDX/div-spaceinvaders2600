@@ -9,7 +9,7 @@ GLOBAL
 
 invhit=0;
 invisible=0;
-movingbases=1;
+movingbases=0;
 
 invanim=0;
 invx=-4;
@@ -49,15 +49,15 @@ sounds[2]=load_wav("sounds/invmov.wav",0);
 sounds[3]=load_wav("sounds/death.wav",0);
 sounds[4]=load_wav("sounds/saucer.wav",1);
 
-write_int(0,0,0,0,&fps);
-write_int(0,0,20,0,&invshots);
+//write_int(0,0,0,0,&fps);
+//write_int(0,0,20,0,&invshots);
 
 
 pscore[0]=0;
 pscore[1]=0;
 level=0;
 landed=0;
-fx();
+//fx();
 loop
     player(150,388);
     invx=-4;
@@ -74,22 +74,24 @@ loop
     cd=0;
     invcount=0;
     invaders();
+    shieldson=1;
+    if(level<2)
     shields();
+    end
     showscores();
     calcscores();
     playing=0;
-    shieldson=1;
     invshots=2;
 
     WHILE(invcount>0 && landed==0)
 
         if(playing)
-            invanim=1-invanim;
             //stop_sound(colid);
             //colid=
             sound(sounds[2],256,256);
 
             if(hitwall==0)
+                invanim=1-invanim;
                 invx+=((4+(2*invcount<24)+(2*invcount<12))*invdir);
             else
                 cd=1;
@@ -254,7 +256,7 @@ ishoot(x,y-36);
 end
 y-=36;
 end
-if(y>300)
+if(y>305)
 shieldson=0;
 end
 if(y>350 && playing)
@@ -507,7 +509,7 @@ private
 map;
 
 begin
-return;
+//return;
 
 map=new_map(640,480,320,240,0);
 screen_copy(0,file,map,0,0,640,480);
