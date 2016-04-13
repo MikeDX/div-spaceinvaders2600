@@ -37,9 +37,22 @@ pid;
 BEGIN
 
 set_mode(640480);
-set_fps(60,2);
 
 load_fpg("invaders.fpg");
+graph=200;
+x=320;
+y=240;
+
+frame(10000);
+fade(0,0,0,10);
+while(fading)
+frame;
+end
+graph=0;
+set_fps(60,2);
+
+fade(100,100,100,10);
+
 put_screen(file,100);
 define_region(1,0,48,640,351);
 
@@ -82,6 +95,7 @@ loop
     calcscores();
     playing=0;
     invshots=2;
+
 
     WHILE(invcount>0 && landed==0)
 
